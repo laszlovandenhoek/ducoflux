@@ -68,7 +68,10 @@ async fn send_to_influxdb(humidity: Option<f64>, temperature: Option<f64>, fan_a
         .add_field("fan_actual", fan_actual)
         .add_field("fan_filtered", fan_filtered);
 
-    client.query(&query).await.expect("Failed to write to InfluxDB");
+    if let Err(e) = client.query(&query).await {
+        eprintln!("Failed to write to InfluxDB: {}", e);
+    }
+
 }
 
 #[tokio::main]
